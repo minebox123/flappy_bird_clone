@@ -5,6 +5,7 @@ canvas.height = window.innerHeight;
 canvas.style.border = "1px solid red";
 canvas.style.background = "url(./images/bg.png) center no-repeat";
 canvas.style.backgroundSize = "cover";
+let continueAnimating = true;
 
 class Bird {
   constructor(x, y) {
@@ -43,6 +44,7 @@ class PipeTop {
 
   drawUpPipe() {
     c.fillStyle = "##FF9800";
+
     c.fillRect(this.x, this.y, this.width, this.height);
   }
   drawBottomPipe() {
@@ -61,21 +63,16 @@ class PipeTop {
     const distX = Math.abs(bird.x - this.x - this.width / 2);
     const distY = Math.abs(bird.y - this.y - this.height / 2);
 
-    // if (distX > this.width / 2 + bird.radius) false;
-    // if (distY > this.height / 2 + bird.radius) false;
-    // if (distX <= this.width / 2) true;
-    // if (distY <= this.height / 2) true;
+    if (distX > this.width / 2 + bird.radius) false;
+    if (distY > this.height / 2 + bird.radius) false;
+    if (distX <= this.width / 2) true;
+    if (distY <= this.height / 2) true;
 
     const dx = distX - this.width / 2;
     const dy = distY - this.height / 2;
 
     if (dx * dx + dy * dy <= bird.radius * bird.radius) {
-      // const div = document.createElement("div");
-      // div.classList.add("gameOver");
-      // const message = document.createElement("h1");
-      // div.appendChild(message);
-      // canvas.appendChild(div);
-      alert("game over");
+      continueAnimating = false;
     }
   }
 }
@@ -97,7 +94,12 @@ for (let i = 0; i < 100; i++) {
 }
 
 function main_loop() {
-  requestAnimationFrame(main_loop);
+  if (continueAnimating) {
+    requestAnimationFrame(main_loop);
+  } else {
+    document.querySelector(".message").style.display = "flex";
+  }
+
   c.clearRect(0, 0, canvas.width, canvas.height);
 
   bird.moveBird();
