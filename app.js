@@ -14,15 +14,18 @@ class Bird {
     this.vx = 1;
     this.vy = 1;
     this.gravity = 1;
-    this.radius = 20;
+    this.radius = 40;
+    this.width = 60;
     this.color = "#283593";
   }
 
   drawBird() {
-    c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    // c.beginPath();
+    // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     c.fillStyle = this.color;
-    c.fill();
+    // c.fill();
+    // c.rotate((-20 * Math.PI) / 180);
+    c.fillRect(this.x, this.y, this.width, this.radius);
   }
   moveBird() {
     this.drawBird();
@@ -60,20 +63,20 @@ class PipeTop {
 
   collision() {
     this.move();
-    const distX = Math.abs(bird.x - this.x - this.width / 2);
-    const distY = Math.abs(bird.y - this.y - this.height / 2);
+    // const distX = Math.abs(bird.x - this.x - this.width / 2);
+    // const distY = Math.abs(bird.y - this.y - this.height / 2);
 
-    if (distX > this.width / 2 + bird.radius) false;
-    if (distY > this.height / 2 + bird.radius) false;
-    if (distX <= this.width / 2) true;
-    if (distY <= this.height / 2) true;
+    // if (distX > this.width / 2 + bird.radius) false;
+    // if (distY > this.height / 2 + bird.radius) false;
+    // if (distX <= this.width / 2) true;
+    // if (distY <= this.height / 2) true;
 
-    const dx = distX - this.width / 2;
-    const dy = distY - this.height / 2;
+    // const dx = distX - this.width / 2;
+    // const dy = distY - this.height / 2;
 
-    if (dx * dx + dy * dy <= bird.radius * bird.radius) {
-      continueAnimating = false;
-    }
+    // if (dx * dx + dy * dy <= bird.radius * bird.radius) {
+    //   continueAnimating = false;
+    // }
   }
 }
 
@@ -107,8 +110,8 @@ function main_loop() {
 }
 
 document.addEventListener("keypress", e => {
-  if ((e.keyCode = 32)) {
-    bird.vy = -bird.radius + 5;
+  if (e.keyCode === 32) {
+    bird.vy = -bird.radius / 2.5;
   }
 });
 
@@ -121,3 +124,11 @@ setTimeout(() => {
 // console.log(distX);
 
 main_loop();
+
+// function draw() {
+//   const img = new Image();
+//   img.onload = function() {
+//     c.drawImage(img, 300, 300);
+//   };
+//   img.src = "./images/bird.png";
+// }

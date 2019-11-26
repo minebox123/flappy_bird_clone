@@ -1,4 +1,9 @@
-// class Bird {
+// const canvas = document.querySelector("canvas");
+// const c = canvas.getContext("2d");
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+
+// export default class Bird {
 //   constructor(x, y) {
 //     this.x = x;
 //     this.y = y;
@@ -16,9 +21,8 @@
 //     c.fill();
 //   }
 //   moveBird() {
+//     this.drawBird();
 //     this.vy += this.gravity;
 //     this.y += this.vy;
 //   }
 // }
-
-// const bird = new Bird(300, canvas.height / 2);
