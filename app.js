@@ -1,38 +1,11 @@
-const canvas = document.querySelector("canvas");
-const c = canvas.getContext("2d");
+export const canvas = document.querySelector("canvas");
+export const c = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-canvas.style.border = "1px solid red";
 canvas.style.background = "url(./images/bg.png) center no-repeat";
 canvas.style.backgroundSize = "cover";
-let continueAnimating = true;
-
-class Bird {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.vx = 1;
-    this.vy = 1;
-    this.gravity = 1;
-    this.radius = 40;
-    this.width = 60;
-    this.color = "#283593";
-  }
-
-  drawBird() {
-    // c.beginPath();
-    // c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    c.fillStyle = this.color;
-    // c.fill();
-    // c.rotate((-20 * Math.PI) / 180);
-    c.fillRect(this.x, this.y, this.width, this.radius);
-  }
-  moveBird() {
-    this.drawBird();
-    this.vy += this.gravity;
-    this.y += this.vy;
-  }
-}
+export let continueAnimating = true;
+import Bird from "./bird.js";
 
 const bird = new Bird(300, canvas.height / 2);
 
@@ -46,89 +19,110 @@ class PipeTop {
   }
 
   drawUpPipe() {
-    c.fillStyle = "##FF9800";
-
+    c.fillStyle = "#1B5E20";
     c.fillRect(this.x, this.y, this.width, this.height);
-  }
-  drawBottomPipe() {
-    c.fillStyle = "##FF9800";
-    c.fillRect(this.x, this.height + 170, this.width, canvas.height);
   }
 
   move() {
-    this.drawBottomPipe();
     this.drawUpPipe();
     this.x -= this.vx;
   }
 
   collision() {
     this.move();
-    // const distX = Math.abs(bird.x - this.x - this.width / 2);
-    // const distY = Math.abs(bird.y - this.y - this.height / 2);
-
-    // if (distX > this.width / 2 + bird.radius) false;
-    // if (distY > this.height / 2 + bird.radius) false;
-    // if (distX <= this.width / 2) true;
-    // if (distY <= this.height / 2) true;
-
-    // const dx = distX - this.width / 2;
-    // const dy = distY - this.height / 2;
-
-    // if (dx * dx + dy * dy <= bird.radius * bird.radius) {
-    //   continueAnimating = false;
-    // }
+    if (
+      bird.x < this.x + this.width &&
+      bird.x + bird.width > this.x &&
+      bird.y < this.y + this.height &&
+      bird.y + bird.height > this.y
+    ) {
+      continueAnimating = false;
+    }
   }
 }
 
-const pipeWidth = 100;
-let xLocation = 600;
-const pipeHeight = () => {
-  const heightProportion = [1.5, 2, 2.5, 3, 3.5, 4, 5];
-  return (
-    canvas.height /
-    heightProportion[Math.floor(Math.random() * heightProportion.length)]
-  );
-};
+class PipeBottom {
+  constructor(x, width, height) {
+    this.x = x;
+    this.y = canvas.height;
+    this.width = width;
+    this.height = height;
+    this.vx = 5;
+  }
 
-const PIPES = [];
+  draw() {
+    c.fillStyle = "#1B5E20";
+    c.fillRect(this.x, this.y - this.height, this.width, this.height);
+  }
 
-for (let i = 0; i < 100; i++) {
-  PIPES.push(new PipeTop((xLocation += 600), 0, pipeWidth, pipeHeight()));
+  move() {
+    this.draw();
+    this.x -= this.vx;
+  }
+
+  collision() {
+    this.move();
+    if (
+      bird.x < this.x + this.width &&
+      bird.x + bird.width > this.x &&
+      bird.y + bird.height > this.y - this.height
+    ) {
+      continueAnimating = false;
+    } else if (bird.y + bird.height >= canvas.height) {
+      continueAnimating = false;
+    }
+  }
 }
 
-function main_loop() {
-  if (continueAnimating) {
-    requestAnimationFrame(main_loop);
-  } else {
-    document.querySelector(".message").style.display = "flex";
+class CreatePipes {
+  constructor() {
+    this.countOfPipes = 100;
+    this.allPipes = [];
+    this.pipeWidth = 100;
+    this.xPosition = canvas.width;
+  }
+
+  randomHeight() {
+    const heightProportion = [1.5, 2, 2.5, 3, 3.5, 4, 5];
+    return (
+      canvas.height /
+      heightProportion[Math.floor(Math.random() * heightProportion.length)]
+    );
+  }
+
+  create() {
+    for (let i = 0; i < this.countOfPipes; i++) {
+      let height = this.randomHeight();
+      const pipes = {
+        top: new PipeTop(this.xPosition, 0, this.pipeWidth, height),
+        bottom: new PipeBottom(
+          this.xPosition,
+          this.pipeWidth,
+          canvas.height - height - 200
+        )
+      };
+      this.allPipes.push(pipes);
+      this.xPosition += 600;
+    }
+  }
+}
+
+const pipes = new CreatePipes();
+pipes.create();
+const p = pipes.allPipes;
+
+(function mainLoop() {
+  if (continueAnimating === true) {
+    requestAnimationFrame(mainLoop);
   }
 
   c.clearRect(0, 0, canvas.width, canvas.height);
-
   bird.moveBird();
-  PIPES.map(pipes => pipes.collision());
-}
 
-document.addEventListener("keypress", e => {
-  if (e.keyCode === 32) {
-    bird.vy = -bird.radius / 2.5;
-  }
-});
+  p.map(pipes => pipes.top.collision());
+  p.map(pipes => pipes.bottom.collision());
+})();
 
 setTimeout(() => {
   canvas.style.backgroundImage = "url(./images/bg_night.png)";
 }, 100000);
-
-// collision
-// const distX = Math.abs(bird.x - rectX - rectW / 2);
-// console.log(distX);
-
-main_loop();
-
-// function draw() {
-//   const img = new Image();
-//   img.onload = function() {
-//     c.drawImage(img, 300, 300);
-//   };
-//   img.src = "./images/bird.png";
-// }

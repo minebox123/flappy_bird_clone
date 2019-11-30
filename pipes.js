@@ -1,5 +1,7 @@
-// class PipeTop {
-//   constructor(x, y, width, height, vx) {
+// import { c } from "./app.js";
+
+// export default class PipeTop {
+//   constructor(x, y, width, height) {
 //     this.x = x;
 //     this.y = y;
 //     this.vx = 5;
@@ -8,51 +10,30 @@
 //   }
 
 //   drawUpPipe() {
-//     c.fillStyle = "#4CAF50";
+//     c.fillStyle = "#1B5E20";
+
 //     c.fillRect(this.x, this.y, this.width, this.height);
 //   }
 //   drawBottomPipe() {
-//     c.fillStyle = "blue";
-//     c.fillRect(this.x, this.height + 150, this.width, canvas.height);
+//     c.fillStyle = "#1B5E20";
+//     c.fillRect(this.x, this.height + 170, this.width, canvas.height);
 //   }
 
 //   move() {
+//     this.drawBottomPipe();
+//     this.drawUpPipe();
 //     this.x -= this.vx;
 //   }
-// }
 
-// class PipeBottom extends PipeTop {
-//   constructor(x, y, width, height) {
-//     super(x, y, width, height);
-//     this.x = x;
-//     this.y = y;
-//     this.width = width;
-//     this.height = height;
-//   }
-//   draw() {
-//     c.fillStyle = "#4CAF50";
-//     c.fillRect(this.x, this.y, this.width, this.height / 1.5);
+//   collision() {
+//     this.move();
+//     if (
+//       bird.x < this.x + this.width &&
+//       bird.x + bird.width > this.x &&
+//       bird.y < this.y + this.height &&
+//       bird.y + bird.radius > this.y
+//     ) {
+//       continueAnimating = false;
+//     }
 //   }
 // }
-
-// const pipeWidth = 100;
-// const pipeHeight = () => {
-//   const heightProportion = [2, 3, 4];
-//   return (
-//     canvas.height /
-//     heightProportion[Math.floor(Math.random() * heightProportion.length)]
-//   );
-// };
-
-// // const pipeBottom = new PipeBottom(
-// //   600,
-// //   canvas.height - 300 / 2,
-// //   pipeWidth,
-// //   -pipeHeight()
-// // );
-// let pipeTop;
-// setInterval(() => {
-//   for (let i = 0; i < 100; i++) {
-//     pipeTop = new PipeTop((600 += 100), 0, pipeWidth, pipeHeight());
-//   }
-// }, 1000);
